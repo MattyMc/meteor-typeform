@@ -29,14 +29,22 @@ data = '[
 	      }],
 	  }
 	},
-	{                
-		"question": {
+		{                
+		"video": {
 	    "title": "This is the first form",
-	    "webhook_submit_url": "some url",
-	    "fields": [{
-	        "type": "short_text",
-	        "question": "Question from form one"
-	      }],
+	    "webhook_submit_url": "https://www.youtube.com/embed/iG9CE55wbtY",
+	  }
+	},
+		{                
+		"video": {
+	    "title": "This is the first form",
+	    "webhook_submit_url": "https://www.youtube.com/embed/dilnw_dP3xk",
+	  }
+	},
+		{                
+		"video": {
+	    "title": "This is the first form",
+	    "webhook_submit_url": "https://www.youtube.com/embed/wX78iKhInsc",
 	  }
 	}
 	]'
