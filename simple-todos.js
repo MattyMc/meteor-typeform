@@ -1,28 +1,59 @@
-if (Meteor.isServer) {
-    Meteor.methods({
-        getForm: function () {
-            this.unblock();
-            var request = Meteor.http.call('POST','https://api.typeform.io/v0.3/forms', 
+questions = [ 
               {
-                data: {
-                  "title": "My new Typeform",
+                  "title": "Question One",
                   "fields": [{
                       "type": "short_text",
                       "question": "This is a test?"
                     }]
                 },
-                headers: {
-                    'X-API-TOKEN': 'd4400a7768341dafbee86b8628aa26f3'
-                }
+                {
+                  "title": "Question Two",
+                  "fields": [{
+                      "type": "short_text",
+                      "question": "This is a test?"
+                    }]
+                },
+                {
+                  "title": "Question Three",
+                  "fields": [{
+                      "type": "short_text",
+                      "question": "This is a test?"
+                    }]
+              }
+            ];
+
+headers = {'X-API-TOKEN': 'd4400a7768341dafbee86b8628aa26f3'}
+url = 'https://api.typeform.io/v0.3/forms'
+
+if (Meteor.isServer) {
+    Meteor.methods({
+        getForm: function () {
+            this.unblock();
+            var request = Meteor.http.call('POST',url, 
+              {
+                data: questions[0],
+                headers: headers
               }
             );
             return request;
-        }
+        },
+        getAllForms: function () {
+            this.unblock();
+            var toRetVar =  questions.map(function(question) {
+              var request = Meteor.http.call('POST',url, 
+                {
+                  data: question,
+                  headers: headers
+                }
+              );
+              return request.data.links[1].href;
+            });
+            console.log(toRetVar)
+            return toRetVar;
+        },
     });
+    Meteor.call("getAllForms");
 }
-
-
-
 
 
 Tasks = new Mongo.Collection("tasks");
