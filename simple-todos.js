@@ -1,4 +1,5 @@
 questions = [ 
+
               {
                   "title": "Question One",
                   "fields": [{
@@ -26,6 +27,19 @@ headers = {'X-API-TOKEN': 'd4400a7768341dafbee86b8628aa26f3'}
 url = 'https://api.typeform.io/v0.3/forms'
 
 if (Meteor.isServer) {
+  Router.route('/webhooks/typeform/:usercode', {where: 'server'})
+    .post(function () {
+      var msg = this.request.body;
+      var answer = msg.answers[0].data.value;
+      var user = decodeURIComponent(this.params.usercode);
+
+      // console.log("MESSAGE: " + msg);
+      console.log("ANSWERS: " + answer);
+      console.log("USER: " + user);
+      // console.log(_.keys(msg));
+      // console.log(this.params);
+      this.response.end('post request\n');
+    });
     Meteor.methods({
         getForm: function () {
             this.unblock();
