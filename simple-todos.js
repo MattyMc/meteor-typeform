@@ -65,7 +65,8 @@ if (Meteor.isClient) {
   (function() { 
     var fingerprint = new Fingerprint().get();
     console.log(fingerprint);
-    Session.set("timeBetween", Date.now() / 1000);
+    Session.set("startTime", Date.now() / 1000);
+    Session.set("EndTime", Date.now() / 1000);
     if (Users.findOne({user_id: 0}) === undefined) {
       Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
     }
@@ -105,8 +106,11 @@ if (Meteor.isClient) {
       // Session.set('timeBetween', Session.get("timeBetween") - Date.now() / 1000);
       return Session.get('currentHref');
     },
-    timeBetween: function() {
-      return Session.get("timeBetween");
+    startTime: function() {
+      return Session.get("startTime");
+    },
+    endTime: function() {
+      return Session.get("endTime");
     }
   });
 
