@@ -17,6 +17,7 @@ if (Meteor.isServer) {
       var answer = msg.answers[0].data.value;
       var user = decodeURIComponent(this.params.usercode);
 
+      console.log(msg.answers);
       console.log(answer);
 
       Users.update({user_id: 0}, {user_id: 0, questionNumber: 0, question_answer: null, next_question: 0});
