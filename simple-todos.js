@@ -17,10 +17,23 @@ if (Meteor.isServer) {
       var answer = msg.answers[0].data.value;
       var user = decodeURIComponent(this.params.usercode);
 
-      console.log(msg.answers);
-      console.log(answer);
+      // console.log(msg.answers);
+      // console.log("ANSWER: " + answer.label);
+      // 
+      if (answer.label === "Take Two Steps Back"){
+       var i = -2;
+      } else if (answer.label === "Take One Step Back"){
+       var i = -1;
+      } else if (answer.label === "Stay Here"){
+       var i = 0;
+      } else if (answer.label === "Move Forward"){
+       var i = 1;
+      } else if (answer.label === "Take Two Steps Forward"){
+       var i = 2;
+      }
 
-      Users.update({user_id: 0}, {user_id: 0, questionNumber: 0, question_answer: null, next_question: parseIn(answer});
+      console.log("NEXT Q: " + i)
+      Users.update({user_id: 1}, {user_id: 1, questionNumber: 0, question_answer: null, next_question: i});
       // This is where we change the question number
       // Tasks.update(this._id, {
       //   $set: {checked: ! this.checked}
@@ -31,7 +44,7 @@ if (Meteor.isServer) {
       // console.log("USER: " + user);
       // console.log(_.keys(msg));
       // console.log(this.params);
-      Users.update({user_id:0},{user_id: 0, question_number: (Math.floor(Math.random() * (200 - 0 + 1)) + 0)} );
+      // Users.update({user_id:0},{user_id: 1, question_number: (Math.floor(Math.random() * (200 - 0 + 1)) + 0)} );
       this.response.end('Thank you! Please come again!\n');
     });
 
@@ -71,20 +84,28 @@ if (Meteor.isClient) {
     console.log(fingerprint);
     Session.set("startTime", Date.now() / 1000);
     Session.set("timeBetween", 0);
-    if (Users.findOne({user_id: 0}) === undefined) {
-      Users.insert({user_id: 0, questionNumber: 0, question_answer: null, next_question: 0});
-    }
+    // if (Users.findOne({user_id: 1}) === undefined) {
+      Users.insert({user_id: 1, questionNumber: 0, question_answer: null, next_question: 0});
+    // }
   }());
 
-  var user = Users.find({user_id: 0});
+  var user = Users.find({user_id: 1});
 
   var handle = user.observe({
     added: function (user) { console.log("ADDED"); }, // run when user is added
     changed: function (user) {
       console.log("CHANGED");
       var i = Session.get("questionNumber");
+
+      var next_question = Users.findOne({user_id: 1}).next_question;
+      if (next_question < 0) {
+        next_question = 0;
+      } else if (next_question > 9) {
+        next_question = 9;
+      }
+
       console.log("EYE: " + i);
-      Session.set("currentHref", Session.get("questionUrls")[i+1]);
+      Session.set("currentHref", Session.get("questionUrls")[next_question + 3]);
       Session.set("timeBetween", Date.now() / 1000 - Session.get("startTime"))
       Session.set("startTime", Date.now() / 1000);
       Session.set("questionNumber", i+1);
