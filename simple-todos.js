@@ -30,6 +30,13 @@ headers = {'X-API-TOKEN': 'd4400a7768341dafbee86b8628aa26f3'}
 url = 'https://api.typeform.io/v0.3/forms'
 
 if (Meteor.isServer) {
+  Router.route('/', function () {
+    this.render('Home', {
+      data: function () { return Items.findOne({_id: this.params._id}); }
+    });
+  });
+
+
   Router.route('/webhooks/typeform/:usercode', {where: 'server'})
     .post(function () {
       var msg = this.request.body;
@@ -86,6 +93,14 @@ Users = new Mongo.Collection("users");
  
 if (Meteor.isClient) {
   // This code only runs on the client
+  Router.route('/', function () {
+    this.render('Home', {
+      data: function () { return Items.findOne({_id: this.params._id}); }
+    });
+  });
+          
+
+  
   (function() { 
     Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
   }());
