@@ -63,6 +63,8 @@ if (Meteor.isClient) {
 
   // Assign a user_id
   (function() { 
+    var fingerprint = new Fingerprint().get();
+    console.log(fingerprint);
     if (Users.findOne({user_id: 0}) === undefined) {
       Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
     }
