@@ -1,6 +1,10 @@
 headers = {'X-API-TOKEN': 'd4400a7768341dafbee86b8628aa26f3'}
 url = 'https://api.typeform.io/v0.3/forms'
 
+Users = new Mongo.Collection("users");
+NextQuestions = new Mongo.Collection("questions");
+
+
 if (Meteor.isServer) {
   Router.route('/', function () {
     this.render('', {
@@ -10,6 +14,10 @@ if (Meteor.isServer) {
     });
   });
 
+  (function() { 
+    NextQuestions.update({user_id: 1}, {user_id: 1, next_question: 0});
+    Users.insert({user_id: 1, questionNumber: 0, question_answer: null});
+  })();
 
   Router.route('/webhooks/typeform/:timstamp', {where: 'server'})
     .post(function () {
@@ -19,21 +27,23 @@ if (Meteor.isServer) {
 
       // console.log(msg.answers);
       // console.log("ANSWER: " + answer.label);
-      // 
+      var i = NextQuestions.findOne({user_id: 1}).next_question;
+
       if (answer.label === "Take Two Steps Back"){
-       var i = -2;
+       var i = i-2;
       } else if (answer.label === "Take One Step Back"){
-       var i = -1;
+       var i = i-1;
       } else if (answer.label === "Stay Here"){
-       var i = 0;
+       var i = i +  0;
       } else if (answer.label === "Move Forward"){
-       var i = 1;
+       var i = i + 1;
       } else if (answer.label === "Take Two Steps Forward"){
-       var i = 2;
+       var i = i + 2;
       }
 
-      console.log("NEXT Q: " + i)
-      Users.update({user_id: 1}, {user_id: 1, questionNumber: 0, question_answer: null, next_question: i});
+      console.log("NEXT Q: " + i);
+      NextQuestions.update({user_id: 1}, {user_id: 1, next_question: i});
+      Users.update({user_id: 1}, {user_id: 1, questionNumber: (Math.floor(Math.random() * (200 - 0 + 1)) + 0), question_answer: null});
       // This is where we change the question number
       // Tasks.update(this._id, {
       //   $set: {checked: ! this.checked}
@@ -66,7 +76,6 @@ if (Meteor.isServer) {
     });
 }
 
-Users = new Mongo.Collection("users");
  
 if (Meteor.isClient) {
   Router.route('/', function () {
@@ -85,7 +94,8 @@ if (Meteor.isClient) {
     Session.set("startTime", Date.now() / 1000);
     Session.set("timeBetween", 0);
     // if (Users.findOne({user_id: 1}) === undefined) {
-      Users.insert({user_id: 1, questionNumber: 0, question_answer: null, next_question: 0});
+    // NextQuestions.update({user_id: 1}, {user_id: 1, next_question: 0});
+      // Users.insert({user_id: 1, questionNumber: 0, question_answer: null});
     // }
   }());
 
@@ -97,7 +107,7 @@ if (Meteor.isClient) {
       console.log("CHANGED");
       var i = Session.get("questionNumber");
 
-      var next_question = Users.findOne({user_id: 1}).next_question;
+      var next_question = NextQuestions.findOne({user_id: 1}).next_question;
       if (next_question < 0) {
         next_question = 0;
       } else if (next_question > 9) {
@@ -105,7 +115,7 @@ if (Meteor.isClient) {
       }
 
       console.log("EYE: " + i);
-      Session.set("currentHref", Session.get("questionUrls")[next_question + 3]);
+      Session.set("currentHref", Session.get("questionUrls")[next_question]);
       Session.set("timeBetween", Date.now() / 1000 - Session.get("startTime"))
       Session.set("startTime", Date.now() / 1000);
       Session.set("questionNumber", i+1);
