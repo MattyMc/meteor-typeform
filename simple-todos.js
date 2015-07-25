@@ -128,7 +128,7 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.leaderboard.helpers({
+  Template.typeForm.helpers({
     player: function() {
       return Session.get('questionNumber');
     },
@@ -137,7 +137,7 @@ if (Meteor.isClient) {
     }
   });
 
-  // Template.leaderboard.player = function(i){
+  // Template.typeForm.player = function(i){
   //     // console.log("TEST:  " + response_object["links"][1]["href"])
   //   if (i == undefined) { var i = 0; }
   //   console.log(Session.get('questionUrls'));

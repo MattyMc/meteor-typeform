@@ -4,43 +4,18 @@
  
 <body>
   <div class="container">
-    <header>
-      <h1>Todo List</h1>
-    </header>
 
-    <form class="new-task">
-        <input type="text" name="text" placeholder="Type to add new tasks" />
-    </form>
  
-   {{> leaderboard}}   
+   {{> typeForm}}   
 
-    <ul>
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-    </ul>
   </div>
 
 
 </body>
  
+<template name="typeForm">
 
-
-<template name="leaderboard">
-
-{{ player }}
 
 <iframe src="{{currentHref}}" frameborder="0" style="display:inline; width: 100%; height: 100%"></iframe>
     
 </template>
-<!-- 
-<template name="task">
-  <li class="{{#if checked}}checked{{/if}}">
-    <button class="delete">&times;</button>
- 
-    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
- 
-    <span class="text">{{text}}</span>
-  </li>
-  <li>{{text}}</li>
-</template> -->
