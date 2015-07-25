@@ -17,6 +17,9 @@ if (Meteor.isServer) {
       var answer = msg.answers[0].data.value;
       var user = decodeURIComponent(this.params.usercode);
 
+      console.log(answer);
+
+      Users.update({user_id: 0}, {user_id: 0, questionNumber: 0, question_answer: null, next_question: 0});
       // This is where we change the question number
       // Tasks.update(this._id, {
       //   $set: {checked: ! this.checked}
@@ -68,7 +71,7 @@ if (Meteor.isClient) {
     Session.set("startTime", Date.now() / 1000);
     Session.set("timeBetween", 0);
     if (Users.findOne({user_id: 0}) === undefined) {
-      Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
+      Users.insert({user_id: 0, questionNumber: 0, question_answer: null, next_question: 0});
     }
   }());
 
