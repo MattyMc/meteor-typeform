@@ -15,9 +15,13 @@ if (Meteor.isServer) {
   });
 
   (function() { 
-    NextQuestions.update({user_id: 1}, {user_id: 1, next_question: 0});
+    NextQuestions.insert({user_id: 1, next_question: 0});
     Users.insert({user_id: 1, questionNumber: 0, question_answer: null});
   })();
+
+  NextQuestions.insert({user_id: 1, next_question: 0});
+  Users.insert({user_id: 1, questionNumber: 0, question_answer: null});
+
 
   Router.route('/webhooks/typeform/:timstamp', {where: 'server'})
     .post(function () {
