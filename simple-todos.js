@@ -20,7 +20,7 @@ if (Meteor.isServer) {
       console.log(msg.answers);
       console.log(answer);
 
-      Users.update({user_id: 0}, {user_id: 0, questionNumber: 0, question_answer: null, next_question: 0});
+      Users.update({user_id: 0}, {user_id: 0, questionNumber: 0, question_answer: null, next_question: parseIn(answer});
       // This is where we change the question number
       // Tasks.update(this._id, {
       //   $set: {checked: ! this.checked}
