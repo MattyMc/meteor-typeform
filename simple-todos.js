@@ -31,8 +31,10 @@ url = 'https://api.typeform.io/v0.3/forms'
 
 if (Meteor.isServer) {
   Router.route('/', function () {
-    this.render('Home', {
-      data: function () { return Items.findOne({_id: this.params._id}); }
+    this.render('', {
+      data: function () { 
+        // return Items.findOne({_id: this.params._id}); 
+      }
     });
   });
 
@@ -87,22 +89,24 @@ if (Meteor.isServer) {
     // console.log("WHAT IS THIS? " + super_question_url_array);
 }
 
-
-Tasks = new Mongo.Collection("tasks");
 Users = new Mongo.Collection("users");
  
 if (Meteor.isClient) {
   // This code only runs on the client
   Router.route('/', function () {
-    this.render('Home', {
-      data: function () { return Items.findOne({_id: this.params._id}); }
+    this.render('', {
+      data: function () { 
+        // return Items.findOne({_id: this.params._id}); 
+      }
     });
   });
           
 
-  
+
   (function() { 
-    Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
+    if (Users.findOne({user_id: 0}) === undefined) {
+      Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
+    }
   }());
 
   var user = Users.find({user_id: 0});

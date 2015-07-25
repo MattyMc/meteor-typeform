@@ -7,6 +7,6 @@
 meteor-platform
 autopublish
 insecure
-iron:router
 http
 mrt:q
+iron:router
