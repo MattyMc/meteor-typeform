@@ -2,7 +2,7 @@ questions = [
 
               {
                   "title": "Question One",
-                  "webhook_submit_url": "http://http://typeform.meteor.com/webhooks/typeform/12345",
+                  "webhook_submit_url": "http://typeform.ngrok.io/webhooks/typeform/12345",
                   "fields": [{
                       "type": "short_text",
                       "question": "This is a test #1?"
@@ -10,6 +10,7 @@ questions = [
                 },
                 {
                   "title": "Question Two",
+                  "webhook_submit_url": "http://typeform.ngrok.io/webhooks/typeform/12345",
                   "fields": [{
                       "type": "short_text",
                       "question": "This is a test #2?"
@@ -17,6 +18,7 @@ questions = [
                 },
                 {
                   "title": "Question Three",
+                  "webhook_submit_url": "http://typeform.ngrok.io/webhooks/typeform/12345",
                   "fields": [{
                       "type": "short_text",
                       "question": "This is a test #3?"
@@ -44,6 +46,7 @@ if (Meteor.isServer) {
       // console.log("USER: " + user);
       // console.log(_.keys(msg));
       // console.log(this.params);
+      Users.update({user_id:0},{user_id: 0, question_number: (Math.floor(Math.random() * (200 - 0 + 1)) + 0)} );
       this.response.end('Thank you! Please come again!\n');
     });
 
@@ -84,7 +87,7 @@ Users = new Mongo.Collection("users");
 if (Meteor.isClient) {
   // This code only runs on the client
   (function() { 
-    Users.insert({user_id: 0, question_number: 0, question_answer: null});
+    Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
   }());
 
   var user = Users.find({user_id: 0});
@@ -93,8 +96,10 @@ if (Meteor.isClient) {
     added: function (user) { console.log("ADDED"); }, // run when user is added
     changed: function (user) {
       console.log("CHANGED");
-      Session.set("question-number", Users.findOne({user_id:0}).question_number);
-      Template.leaderboard.player(i);
+      var i = Session.get("questionNumber");
+      console.log("EYE: " + i);
+      Session.set("currentHref", Session.get("questionUrls")[i+1]);
+      Session.set("questionNumber", i+1);
     }, // run when post is changed
     removed: function (user) { console.log("REMOVED"); } // run when post is removed
   });
@@ -115,7 +120,9 @@ if (Meteor.isClient) {
         console.log(error);
     } else {
         // console.log(response_object);
-        Session.set('question-urls', results);
+        Session.set('questionUrls', results);
+        Session.set("questionNumber", 0);
+        Session.set("currentHref", results[0]);
         // console.log("RESULTS HERE: " + results);
         return "We won!";
     }
@@ -123,16 +130,19 @@ if (Meteor.isClient) {
 
   Template.leaderboard.helpers({
     player: function() {
-      return Session.get('question-number');
+      return Session.get('questionNumber');
+    },
+    currentHref: function() {
+      return Session.get('currentHref');
     }
   });
 
   // Template.leaderboard.player = function(i){
   //     // console.log("TEST:  " + response_object["links"][1]["href"])
   //   if (i == undefined) { var i = 0; }
-  //   console.log(Session.get('question-urls'));
-  //   if(Session.get("question-urls") !== undefined) {
-  //     return Session.get('question-urls')[i];
+  //   console.log(Session.get('questionUrls'));
+  //   if(Session.get("questionUrls") !== undefined) {
+  //     return Session.get('questionUrls')[i];
   //   }
   // };
 
