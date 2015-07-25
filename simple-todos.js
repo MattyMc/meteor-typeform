@@ -30,14 +30,23 @@ Tasks = new Mongo.Collection("tasks");
 if (Meteor.isClient) {
   // This code only runs on the client
   
+  
   Meteor.call("getForm", function(error, results) {
     if (error) {
         console.log(error);
     } else {
         response_object = JSON.parse(results["content"]);
         console.log(response_object["links"][1]["href"]);
+        return "We won!";
     }
+  }).then(function(value) {
+    console.log(value);
   });
+
+  // Template.leaderboard.player = function(){
+  //     console.log("TEST:  " + response_object["links"][1]["href"])
+  //     return response_object["links"][1]["href"].toString();
+  // }();
 
   Template.body.helpers({
     tasks: function () {

@@ -12,7 +12,7 @@
         <input type="text" name="text" placeholder="Type to add new tasks" />
     </form>
  
-    
+   {{> leaderboard}}   
 
     <ul>
       {{#each tasks}}
@@ -20,9 +20,19 @@
       {{/each}}
     </ul>
   </div>
+
+
 </body>
  
 
+
+<template name="leaderboard">
+Hello World
+{{ player }}
+
+<iframe src="" frameborder="0"></iframe>
+    
+</template>
 
 <template name="task">
   <li class="{{#if checked}}checked{{/if}}">
