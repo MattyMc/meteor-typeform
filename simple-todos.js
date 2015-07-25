@@ -11,7 +11,7 @@ if (Meteor.isServer) {
   });
 
 
-  Router.route('/webhooks/typeform/:usercode', {where: 'server'})
+  Router.route('/webhooks/typeform/:timstamp', {where: 'server'})
     .post(function () {
       var msg = this.request.body;
       var answer = msg.answers[0].data.value;
@@ -65,6 +65,7 @@ if (Meteor.isClient) {
   (function() { 
     var fingerprint = new Fingerprint().get();
     console.log(fingerprint);
+    Session.set("timeBetween", Date.now() / 1000);
     if (Users.findOne({user_id: 0}) === undefined) {
       Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
     }
@@ -79,6 +80,7 @@ if (Meteor.isClient) {
       var i = Session.get("questionNumber");
       console.log("EYE: " + i);
       Session.set("currentHref", Session.get("questionUrls")[i+1]);
+      Session.set("timeBetween", Date.now() / 1000 - Session.get("timeBetween"));
       Session.set("questionNumber", i+1);
     }, // run when post is changed
     removed: function (user) { console.log("REMOVED"); } // run when post is removed
@@ -98,7 +100,13 @@ if (Meteor.isClient) {
 
   Template.typeForm.helpers({
     currentHref: function() {
+      // var tb = Session.get("timeBetween");
+      // Session.set("timeBetween", (Date.now() / 1000 - tb) );
+      // Session.set('timeBetween', Session.get("timeBetween") - Date.now() / 1000);
       return Session.get('currentHref');
+    },
+    timeBetween: function() {
+      return Session.get("timeBetween");
     }
   });
 
