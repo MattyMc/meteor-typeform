@@ -66,7 +66,7 @@ if (Meteor.isClient) {
     var fingerprint = new Fingerprint().get();
     console.log(fingerprint);
     Session.set("startTime", Date.now() / 1000);
-    Session.set("EndTime", Date.now() / 1000);
+    Session.set("timeBetween", 0);
     if (Users.findOne({user_id: 0}) === undefined) {
       Users.insert({user_id: 0, questionNumber: 0, question_answer: null});
     }
@@ -81,7 +81,8 @@ if (Meteor.isClient) {
       var i = Session.get("questionNumber");
       console.log("EYE: " + i);
       Session.set("currentHref", Session.get("questionUrls")[i+1]);
-      Session.set("timeBetween", Date.now() / 1000 - Session.get("timeBetween"));
+      Session.set("timeBetween", Date.now() / 1000 - Session.get("startTime"))
+      Session.set("startTime", Date.now() / 1000);
       Session.set("questionNumber", i+1);
     }, // run when post is changed
     removed: function (user) { console.log("REMOVED"); } // run when post is removed
@@ -109,8 +110,8 @@ if (Meteor.isClient) {
     startTime: function() {
       return Session.get("startTime");
     },
-    endTime: function() {
-      return Session.get("endTime");
+    timeBetween: function() {
+      return Session.get("timeBetween");
     }
   });
 
